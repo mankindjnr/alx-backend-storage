@@ -4,29 +4,24 @@
 DROP PROCEDURE IF EXISTS ComputeAverageScoreForUser;
 DELIMITER //
 
-CREATE PROCEDURE ComputeAverageScoreForUser(
-       IN user_id INT
-)
+CREATE PROCEDURE ComputeAverageScoreForUser(IN user_id INT)
 BEGIN
-	DECLARE student_name VARCHAR(255);
-	DECLARE average FLOAT;
+    DECLARE total_score FLOAT;
+    DECLARE num_scores INT;
 
-	SELECT name INTO student_name
-	FROM projects
-	WHERE id = user_id;
-	
-	SELECT AVG(score) INTO average
-	FROM corrections
-	WHERE user_id = user_id;
+    SELECT SUM(score) INTO total_score
+    FROM corrections
+    WHERE user_id = user_id;
 
-	IF EXISTS (SELECT * FROM users WHERE id = user_id) THEN
-	   UPDATE users
-	   SET average_score = average
-	   WHERE id = user_id;
-	ELSE
-		INSERT INTO users(id, name, average_score)
-		VALUES (user_id, student_name, average);
-	END IF;
+    SELECT COUNT(*) INTO num_scores
+    FROM corrections
+    WHERE user_id = user_id;
+
+    IF num_scores > 0 THEN
+        UPDATE users
+        SET average_score = total_score / num_scores
+        WHERE id = user_id;
+    END IF;
 END //
 
 DELIMITER ;
