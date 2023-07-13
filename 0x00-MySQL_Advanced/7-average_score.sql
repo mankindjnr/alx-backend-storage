@@ -1,6 +1,7 @@
 -- createa stored procedure that computes and store
 -- the average score for a student
 -- average can be a decimal
+DROP PROCEDURE IF EXISTS ComputeAverageScoreForUser;
 DELIMITER //
 
 CREATE PROCEDURE ComputeAverageScoreForUser(
@@ -8,7 +9,7 @@ CREATE PROCEDURE ComputeAverageScoreForUser(
 )
 BEGIN
 	DECLARE student_name VARCHAR(255);
-	DECLARE average DECIMAL(5, 2);
+	DECLARE average FLOAT;
 
 	SELECT name INTO student_name
 	FROM projects
