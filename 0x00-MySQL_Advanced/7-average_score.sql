@@ -19,8 +19,14 @@ BEGIN
 	FROM corrections
 	WHERE user_id = user_id;
 
-	INSERT INTO users(id, name, average_score)
-	VALUES (user_id, student_name, average);
+	IF EXISTS (SELECT * FROM users WHERE id = user_id) THEN
+	   UPDATE users
+	   SET average_score = average
+	   WHERE id = user_id;
+	ELSE
+		INSERT INTO users(id, name, average_score)
+		VALUES (user_id, student_name, average);
+	END IF;
 END //
 
 DELIMITER ;
