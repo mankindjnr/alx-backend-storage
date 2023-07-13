@@ -1,7 +1,6 @@
 -- createa stored procedure that computes and store
 -- the average score for a student
 -- average can be a decimal
-DROP PROCEDURE IF EXISTS ComputeAverageScoreForUser;
 DELIMITER //
 
 CREATE PROCEDURE ComputeAverageScoreForUser(
