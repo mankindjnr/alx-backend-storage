@@ -67,7 +67,7 @@ def create_doc():
 printer = pprint.PrettyPrinter()
 
 def find_all_people():
-    people = person_collection.find() #when find is empty, it finds all the collections
+    people = person_collection.find() #when find is empty, it finds all the documents in the collection
     """print(people)
         print(list(people))
     """
@@ -76,6 +76,17 @@ def find_all_people():
         printer.pprint(person)
 
 #find_all_people()
+
+
+#---------------------------------------------------------
+#ALX
+mongo_collection = person_collection
+def list_all(mongo_c):
+    collections = list(mongo_collection.find())
+    print(collections)
+
+if __name__ == "__main__":
+    list_all(mongo_collection)
 
 #find a single document
 #its ideal to search for documents using their id but here we will use its first name, you can also specify multiple values
@@ -160,7 +171,7 @@ def replace_one(person_id):
     }
     person_collection.replace_one({"_id": _id}, new_doc)
 
-replace_one("64b501f20035ec84b756451f")
+#replace_one("64b501f20035ec84b756451f")
 
 #deleting a adocument
 def delete_doc_by_id(person_id):
@@ -208,7 +219,7 @@ def add_address_foreign(person_id, address):
     address_collection = production.address #adding the colletion address_collection of production database
     address_collection.insert_one(address) #adding the document address to the collection address_collection
 
-add_address_foreign("64b501f20035ec84b756451e", address)
+#add_address_foreign("64b501f20035ec84b756451e", address)
 
 
 
