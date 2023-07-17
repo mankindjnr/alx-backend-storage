@@ -80,13 +80,9 @@ def find_all_people():
 
 #---------------------------------------------------------
 #ALX
-mongo_collection = person_collection
-def list_all(mongo_c):
-    collections = list(mongo_collection.find())
-    print(collections)
-
-if __name__ == "__main__":
-    list_all(mongo_collection)
+mongo_collect = person_collection
+if mongo_collect.count_documents({}) == 0:
+    print("empty colection")
 
 #find a single document
 #its ideal to search for documents using their id but here we will use its first name, you can also specify multiple values
