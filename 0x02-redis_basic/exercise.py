@@ -8,6 +8,20 @@ import uuid
 import functools
 
 
+def replay(method: Callable) -> None:
+    """display the history of calls of a particular func"""
+    imputs_key = f"{method.__qualname__}:inputs"
+    outputs_key = f"{method.__qualname__}:outputs"
+
+    inputs = cache._redis.lrange(inputs_key, 0, -1)
+    outputs = cache._redis.lrange(outputs, 0, -1)
+
+    print(f"{method.__qualname__} was called {len(inputs)} times:")
+
+    for ins, outs in zip(inputs, outputs):
+        print(f"{method.__qualname__}(*{ins.decode()}) -> {outs.decode()}")
+
+
 def call_history(method: Callable) -> Callable:
     """redis commands rpush, lpush, lrange"""
     @functools.wraps(method)
