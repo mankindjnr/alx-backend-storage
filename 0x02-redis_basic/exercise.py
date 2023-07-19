@@ -8,6 +8,22 @@ import uuid
 import functools
 
 
+def call_history(method: Callable) -> Callable:
+    """redis commands rpush, lpush, lrange"""
+    @functools.wraps(method)
+    def wrapper(self, *args: Any, **kwargs: Any) -> Any:
+        """the wrapper for call history"""
+        inputs_key = f"{method.__qualname__}:inputs"
+        outputs_key = f"{method.__qualname__}:outputs"
+
+        self._redis.rpush(inputs_key, str(args))
+        output = method(self, *args, **kwargs)
+        self._redis.rpush(outputs_key, output)
+
+        return output
+    return wrapper
+
+
 def count_calls(method: Callable) -> Callable:
     """count calls decorator taking a single callable"""
     @functools.wraps(method)
@@ -28,6 +44,7 @@ class Cache:
         self._redis = redis.Redis()
 
     @count_calls
+    @call_history
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """
         a store method that takes data arg and returns a str.
