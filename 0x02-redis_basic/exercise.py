@@ -2,18 +2,18 @@
 """
 creating a cache class in the init method
 """
-from typing import Union, Callable
+from typing import Union, Callable, Any
 import redis
 import uuid
 import functools
 
 
-def count_calls(method):
+def count_calls(method: Callable) -> Callable:
     """count calls decorator taking a single callable"""
     @functools.wraps(method)
-    def wrapper(self, *args, **kwargs):
+    def wrapper(self, *args: Any, **kwargs: Any) -> Any:
         """the wrapper function"""
-        key = method.__qualname__
+        key: str = method.__qualname__
         self._redis.incr(key)
         return method(self, *args, **kwargs)
     return wrapper
