@@ -2,7 +2,7 @@
 """
 creating a cache class in the init method
 """
-from typing import Union
+from typing import Union, Callable
 import redis
 import uuid
 
@@ -24,6 +24,24 @@ class Cache:
         key: str = str(uuid.uuid4())
         self._redis.set(key, data)
         return key
+
+    def get(self, key: str, fn: Callable = None) -> Union[str, bytes, int]:
+        """get method takes in a key str witn optiona callable"""
+        data = self._redis.get(key)
+        if data is None:
+            return None
+
+        if fn is not None:
+            return fn(data)
+        return data
+
+    def get_str(self, key: str) -> Union[str, None]:
+        """get str auto parameterizes cache.get with correct conversion"""
+        return self._redis.get(key, fn=lambda d: d.decode("utf-8"))
+
+    def get_int(self, key: str) -> Union[int, None]:
+        """get int auto parameterizes caceh.get with correct conversion"""
+        return self._redis.get(key, fn=int)
 
     def flush(self):
         """flushing the redis instance"""
